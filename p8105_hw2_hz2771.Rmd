@@ -76,6 +76,21 @@ observations, and precipitation data for 2018 and 2019 contains
 - The median number of sports balls in a dumpster in 2017 is `r trash_wheel_df %>% filter(year == 2017) %>% pull(sports_balls) %>% median()`.
 
 
+# Problem 2
+
+## Clean data in the `pol-month.csv`
+
+```{r, warning=FALSE}
+pols_month_path = "./data/fivethirtyeight_datasets/pols-month.csv"
+pols_month_df = 
+  read_csv(pols_month_path) %>% 
+  janitor::clean_names() %>% 
+  separate(mon, into = c("year", "month", "day"), convert = TRUE) %>% 
+  mutate(month = month.name[month],
+         president = recode(prez_gop, `0` = "dem", `1` = "gop", `2` = "gop")) %>%
+  select(-day, -starts_with("prez"))
+
+```
 
 
 
