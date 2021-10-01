@@ -5,3 +5,59 @@ date: "2021/10/1"
 output: github_document
 ---
 
+# Import required packages
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+# Problem 1
+
+Use relative path to access the data file:
+
+```{r}
+data_path = "./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx"
+```
+
+Read and clean the Mr.Trash Wheel sheet:
+
+```{r, warning = FALSE}
+trash_wheel_df = 
+  read_excel(data_path, 
+             sheet = "Mr. Trash Wheel",
+             range = cell_cols("A:N")) %>% 
+  janitor::clean_names() %>% 
+  drop_na(dumpster) %>% 
+  mutate(sports_balls = round(sports_balls))
+```
+
+Read and clean precipitation data for 2018 and 2019:
+
+```{r}
+precipitation_2019 =
+  read_excel(data_path,
+             sheet = "2019 Precipitation",
+             skip = 1) %>%
+  janitor::clean_names() %>% 
+  drop_na(total, month) %>% 
+  mutate(year = 2019)
+
+precipitation_2018 = 
+  read_excel(data_path,
+             sheet = "2018 Precipitation",
+             skip = 1) %>% 
+  janitor::clean_names() %>% 
+  drop_na(total, month) %>% 
+  mutate(year = 2018)
+```
+
+Combine precipitation datasets and convert month to a character variable:
+
+```{r}
+precipitation_df = 
+  bind_rows(precipitation_2018, precipitation_2019) %>% 
+  mutate(month = month.name[month])
+```
+
+
