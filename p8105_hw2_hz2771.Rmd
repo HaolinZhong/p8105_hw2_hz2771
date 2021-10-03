@@ -81,9 +81,9 @@ observations, and precipitation data for 2018 and 2019 contains
 ## Clean data in the `pol-month.csv`
 
 ```{r, warning=FALSE}
-pols_month_path = "./data/fivethirtyeight_datasets/pols-month.csv"
-pols_month_df = 
-  read_csv(pols_month_path) %>% 
+pols_path = "./data/fivethirtyeight_datasets/pols-month.csv"
+pols_df = 
+  read_csv(pols_path) %>% 
   janitor::clean_names() %>% 
   separate(mon, into = c("year", "month", "day"), convert = TRUE) %>% 
   mutate(month = month.name[month],
@@ -106,6 +106,17 @@ snp_df =
   
 ```
 
+## Tidy up the unemployment data
+
+```{r}
+unepl_path = "./data/fivethirtyeight_datasets/unemployment.csv"
+unepl_df = 
+  read_csv(unepl_path) %>%
+  pivot_longer(cols = "Jan":"Dec", names_to = "month", values_to = "unemployment_rate") %>% 
+  mutate(month = month.name[which(month.abb == month)])
+
+
+```
 
 
 
