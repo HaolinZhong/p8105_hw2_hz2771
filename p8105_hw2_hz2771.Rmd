@@ -99,7 +99,8 @@ snp_path = "./data/fivethirtyeight_datasets/snp.csv"
 snp_df =
   read_csv(snp_path) %>% 
   janitor::clean_names() %>% 
-  separate(date, into = c("month", "day", "year"), convert = TRUE) %>% 
+  mutate(date = parse_date(date, format = '%m/%d/%y')) %>% 
+  separate(date, into = c("year", "month", "day"), convert = TRUE) %>% 
   arrange(year, month) %>% 
   mutate(month = month.name[month]) %>% 
   relocate(year, month)
@@ -110,11 +111,24 @@ snp_df =
 
 ```{r}
 unepl_path = "./data/fivethirtyeight_datasets/unemployment.csv"
+
+# Create a month dict to facilitate the transformation of month format
+month_dict = month.name
+names(month_dict) = month.abb
+
 unepl_df = 
   read_csv(unepl_path) %>%
   pivot_longer(cols = "Jan":"Dec", names_to = "month", values_to = "unemployment_rate") %>% 
-  mutate(month = month.name[which(month.abb == month)])
+  mutate(month = as.character(month_dict[month])) %>% 
+  janitor::clean_names()
+```
 
+## Integrate the three datasets
+
+```{r}
+df_538 = 
+  left_join(pols_df, snp_df) %>% 
+  left_join(unepl_df)
 
 ```
 
