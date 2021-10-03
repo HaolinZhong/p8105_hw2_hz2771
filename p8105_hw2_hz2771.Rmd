@@ -203,7 +203,46 @@ pop_bb_names =
 ```
 
 
+## Trend of Olivia
+
+```{r}
+pop_bb_names %>% 
+  filter(childs_first_name == "Olivia", 
+         gender == "FEMALE") %>% 
+  select(year_of_birth, ethnicity, rank) %>% 
+  pivot_wider(
+    names_from = year_of_birth, 
+    values_from = rank)
+```
 
 
+## Trend of most popular male name
+
+```{r}
+pop_bb_names %>% 
+  filter(gender == "MALE",
+         rank == 1) %>% 
+  select(year_of_birth, ethnicity, childs_first_name) %>% 
+  pivot_wider(
+    names_from = year_of_birth,
+    values_from = childs_first_name
+  )
+```
+
+## Plot Name count against popularity rank
+
+```{r}
+pop_bb_names %>% 
+  filter(
+    gender == "MALE",
+    ethnicity == "White Non Hispanic",
+    year_of_birth == 2016
+  ) %>% 
+  ggplot(aes(x = rank, y = count)) +
+  geom_point() +
+  ylab("name count") +
+  xlab("name rank")
+
+```
 
 
