@@ -169,3 +169,41 @@ variables and `r nrow(df_538)` observations. Some `NA` values may exists in the
 `close` and `employment_rate` variables, due to the lack for stock data in
 corresponding years or months. 
 
+
+
+# Problem 3
+
+## Load and tidy data
+
+The data cleaning process has considered following issues:
+- The case structure of `child's first name` changed from all caps to only 
+capitalizing the first letter.
+- `ethnicity` code changed from abbreviated description to full description. 
+- In some years there are duplicated names.
+
+```{r}
+pop_bb_names_path = "./data/Popular_Baby_Names.csv"
+
+pop_bb_names = 
+  read_csv(pop_bb_names_path) %>% 
+  janitor::clean_names() %>% 
+  mutate(
+    childs_first_name = str_to_title(childs_first_name),
+    ethnicity = str_to_title(ethnicity)
+  ) %>% 
+  mutate(
+    ethnicity = recode(ethnicity,
+      "Asian And Paci" = "Asian And Pacific Islander",
+      "Black Non Hisp" = "Black Non Hispanic",
+      "White Non Hisp" = "White Non Hispanic"
+    )
+  ) %>% 
+  distinct() %>% 
+  arrange(year_of_birth,ethnicity, rank)
+```
+
+
+
+
+
+
