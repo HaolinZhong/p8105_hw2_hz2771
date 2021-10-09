@@ -21,12 +21,12 @@ library(readxl)
 
 ## Read and clean the Mr.Trash Wheel sheet:
 
-```{r, warning = FALSE}
+```{r, warning=FALSE}
 trash_wheel_path = "./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx"
 trash_wheel_df = 
   read_excel(trash_wheel_path, 
              sheet = "Mr. Trash Wheel",
-             range = cell_cols("A:N")) %>% 
+             range = "A2:N535") %>% 
   janitor::clean_names() %>% 
   drop_na(dumpster) %>% 
   mutate(sports_balls = round(sports_balls))
@@ -72,10 +72,9 @@ observations, and precipitation data for 2018 and 2019 contains
 `r nrow(precipitation_df)` observations.
 
 - The total precipitation in 2018 is
-`r precipitation_df %>% filter(year == 2018) %>% pull(total) %>% sum()`.
+`r sum(precipitation_df[precipitation_df["year"] == 2018, "total"])`.
 
-- The median number of sports balls in a dumpster in 2017 is `r trash_wheel_df %>% filter(year == 2017) %>% pull(sports_balls) %>% median()`.
-
+- The median number of sports balls in a dumpster in 2019 is `r trash_wheel_df %>% filter(year == 2019) %>% pull(sports_balls) %>% median()`.
 
 # Problem 2
 
